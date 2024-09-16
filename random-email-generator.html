@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>otto - Random Email Generator</title>
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+      defer
+    ></script>
+  </head>
+
+  <body class="bg-grey-100 px-3 font-sans leading-normal tracking-normal">
+    <div class="container pt-8 mx-auto">
+    		<h1 class="text-lg font-semibold mb-4">Random Email Generator</h1>
+
+				<p class="mb-4">Use this online random email generator to generate a list of random and fake email addresses. 
+				Emails generated in this page are fake (randomly generated) and cannot be used to receive emails.
+				By default 10 random email addresses are generated, you can change this number below.
+				</p>
+
+      <p class="text-sm font-bold mb-4">How many emails to generate?</p>
+
+      <div class="flex items-center space-x-4 mb-4">
+        <div class="flex-1">
+          <input type="text" name="iTotal" id="iTotal" value="10" required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <button type="button" onclick="GenerateRandomEmails();"
+          class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          Generate Random Emails
+        </button>
+      </div>
+
+      <div class="mb-4">
+        <textarea name="text" rows="15" class="result w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          wrap="off" spellcheck="false"></textarea>
+      </div>
+
+      <div class="mb-4">
+        <button type="button" onclick="copyToClipboard();"
+          class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+          Copy to Clipboard
+        </button>
+      </div>
+    </div>
+
+    <script>
+      function stringGen(len, num) {
+        var text = "";
+        var alpha = "abcdefghijklmnopqrstuvwxyz";
+        var alnum = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < len; i++) {
+          text += (num ? alnum : alpha).charAt(Math.floor(Math.random() * (num ? alnum.length : alpha.length)));
+        }
+
+        return text;
+      }
+
+      function GenerateRandomEmails() {
+        // Clear the result textarea
+        document.querySelector("textarea.result").value = "";
+
+        // Get the total number of emails to generate
+        var iTotal = parseInt(document.getElementById('iTotal').value, 10);
+
+        // Define the domain and names arrays
+        const surnames = ["Abbott", "Acevedo"];
+        const names = ["John", "Jane"];
+        const emaildomains = ["example.com", "test.com"];
+
+        if (iTotal > 0) {
+          let result = [];
+
+          for (var i = 0; i < iTotal; i++) {
+            const randomDomainIndex = Math.floor(Math.random() * emaildomains.length);
+            const randomNameIndex = Math.floor(Math.random() * names.length);
+            const randomSurnameIndex = Math.floor(Math.random() * surnames.length);
+
+            const max = 20;
+            const min = 10;
+            const multiplier = (i % 2) / 100;
+
+            if (multiplier === 0) {
+              result.push(`${names[randomNameIndex].toLowerCase()}.${surnames[randomSurnameIndex].toLowerCase()}@${emaildomains[randomDomainIndex]}`);
+            } else {
+              result.push(`${stringGen(Math.floor(Math.random() * (max - min + 1)) + min, true)}@${emaildomains[randomDomainIndex]}`);
+            }
+          }
+
+          // Set the result to the textarea
+          document.querySelector("textarea.result").value = result.join("\n");
+        }
+      }
+
+      function copyToClipboard() {
+        // Get the textarea element
+        var textarea = document.querySelector("textarea.result");
+
+        // Select the text
+        textarea.select();
+        textarea.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text to clipboard
+        document.execCommand("copy");
+
+        // Alert the user
+        alert("Copied to clipboard!");
+      }
+    </script>
+  </body>
+</html>
