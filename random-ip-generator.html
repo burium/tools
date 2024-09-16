@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>otto - Random IP Generator</title>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+</head>
+<body class="bg-grey-100 px-3 font-sans leading-normal tracking-normal">
+    <div class="container pt-8 mx-auto">
+        <h1 class="text-lg font-semibold mb-4">Random IP Generator</h1>
+
+        <p class="mb-4">
+            Use this online random IP generator to generate a list of random IP addresses in the format 123.123.123.123 (IPv4 addresses). By default, 10 random IP addresses are generated; you can change this number below. Check also the other similar tool to generate random IPv6 addresses.
+        </p>
+
+        <p class="text-sm font-bold mb-4">How many IPv4 addresses to generate?</p>
+
+        <div class="flex items-center space-x-4 mb-4">
+            <div class="flex-1">
+                <input type="text" name="IpTotal" id="IpTotal" value="10" required
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <button type="button" onclick="GenerateRandomIPs();"
+                class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Generate Random IPs
+            </button>
+        </div>
+
+        <div class="mb-4">
+            <textarea name="text" rows="15" class="result w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                wrap="off" spellcheck="false"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <button type="button" onclick="copyToClipboard();"
+                class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                Copy to Clipboard
+            </button>
+        </div>
+    </div>
+
+    <script>
+      function GenerateRandomIPs() {
+        // Clear the result textarea
+        document.querySelector("textarea.result").value = "";
+
+        // Get the total number of IPs to generate
+        var IpTotal = parseInt(document.getElementById('IpTotal').value, 10);
+        
+        // Validation
+        if (isNaN(IpTotal) || IpTotal <= 0) {
+          alert("Please enter a valid number greater than 0.");
+          return;
+        }
+
+        function randRange(low, high) {
+          return Math.floor(Math.random() * (high - low + 1) + low);
+        }
+
+        var result = [];
+        
+        for (var i = 0; i < IpTotal; i++) {
+          var r1 = randRange(0, 255);
+          var r2 = randRange(0, 255);
+          var r3 = randRange(0, 255);
+          var r4 = randRange(0, 255);
+          result.push(`${r1}.${r2}.${r3}.${r4}`);
+        }
+        
+        // Set the result to the textarea
+        document.querySelector("textarea.result").value = result.join("\n");
+      }
+
+      function copyToClipboard() {
+        // Get the textarea element
+        var textarea = document.querySelector("textarea.result");
+
+        // Use the Clipboard API to copy the text
+        navigator.clipboard.writeText(textarea.value).then(function() {
+            // Success callback
+            alert("Copied to clipboard!");
+        }).catch(function(err) {
+            // Error callback
+            console.error("Failed to copy text: ", err);
+        });
+      }
+    </script>
+</body>
+</html>
