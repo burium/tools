@@ -13,10 +13,10 @@
         <h1 class="text-lg font-semibold mb-4">Random IP Generator</h1>
 
         <p class="mb-4">
-            Use this online random IP generator to generate a list of random IP addresses in the format 123.123.123.123 (IPv4 addresses). By default, 10 random IP addresses are generated; you can change this number below. Check also the other similar tool to generate random IPv6 addresses.
+            Use this online random IP generator to generate a list of random IP addresses. By default, 10 random IP addresses are generated; you can change this number below. You can also generate IPv6 addresses with the appropriate button.
         </p>
 
-        <p class="text-sm font-bold mb-4">How many IPv4 addresses to generate?</p>
+        <p class="text-sm font-bold mb-4">How many IP addresses to generate?</p>
 
         <div class="flex items-center space-x-4 mb-4">
             <div class="flex-1">
@@ -26,7 +26,12 @@
 
             <button type="button" onclick="GenerateRandomIPs();"
                 class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                Generate Random IPs
+                Generate Random IPv4
+            </button>
+
+            <button type="button" onclick="GenerateRandomIPv6Addresses();"
+                class="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                Generate Random IPv6
             </button>
         </div>
 
@@ -49,7 +54,7 @@
         document.querySelector("textarea.result").value = "";
 
         // Get the total number of IPs to generate
-        var IpTotal = parseInt(document.getElementById('IpTotal').value, 10);
+        const IpTotal = parseInt(document.getElementById('IpTotal').value, 10);
         
         // Validation
         if (isNaN(IpTotal) || IpTotal <= 0) {
@@ -61,14 +66,46 @@
           return Math.floor(Math.random() * (high - low + 1) + low);
         }
 
-        var result = [];
+        const result = [];
         
-        for (var i = 0; i < IpTotal; i++) {
-          var r1 = randRange(0, 255);
-          var r2 = randRange(0, 255);
-          var r3 = randRange(0, 255);
-          var r4 = randRange(0, 255);
+        for (let i = 0; i < IpTotal; i++) {
+          const r1 = randRange(0, 255);
+          const r2 = randRange(0, 255);
+          const r3 = randRange(0, 255);
+          const r4 = randRange(0, 255);
           result.push(`${r1}.${r2}.${r3}.${r4}`);
+        }
+        
+        // Set the result to the textarea
+        document.querySelector("textarea.result").value = result.join("\n");
+      }
+
+      function GenerateRandomIPv6() {
+        const blocks = [];
+        for (let i = 0; i < 8; i++) {
+          const block = Math.floor(Math.random() * 65536);
+          blocks.push(block.toString(16).padStart(4, '0'));
+        }
+        return blocks.join(':');
+      }
+
+      function GenerateRandomIPv6Addresses() {
+        // Clear the result textarea
+        document.querySelector("textarea.result").value = "";
+
+        // Get the total number of IPs to generate
+        const IpTotal = parseInt(document.getElementById('IpTotal').value, 10);
+        
+        // Validation
+        if (isNaN(IpTotal) || IpTotal <= 0) {
+          alert("Please enter a valid number greater than 0.");
+          return;
+        }
+
+        const result = [];
+        
+        for (let i = 0; i < IpTotal; i++) {
+          result.push(GenerateRandomIPv6());
         }
         
         // Set the result to the textarea
@@ -77,13 +114,13 @@
 
       function copyToClipboard() {
         // Get the textarea element
-        var textarea = document.querySelector("textarea.result");
+        const textarea = document.querySelector("textarea.result");
 
         // Use the Clipboard API to copy the text
-        navigator.clipboard.writeText(textarea.value).then(function() {
+        navigator.clipboard.writeText(textarea.value).then(() => {
             // Success callback
             alert("Copied to clipboard!");
-        }).catch(function(err) {
+        }).catch(err => {
             // Error callback
             console.error("Failed to copy text: ", err);
         });
